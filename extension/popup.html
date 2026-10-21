@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { width: 260px; font: 13px -apple-system, system-ui, sans-serif; margin: 12px; }
+    label { display: block; margin: 6px 0; }
+    select, input { width: 100%; box-sizing: border-box; }
+    .modes { display: flex; gap: 4px; margin-top: 10px; }
+    .modes button { flex: 1; }
+    button.active { font-weight: bold; }
+    #translate { width: 100%; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <label>CLI
+    <select id="cli">
+      <option value="claude">claude</option>
+      <option value="codex">codex</option>
+      <option value="cursor">cursor-agent</option>
+    </select>
+  </label>
+  <label>Model (empty = CLI default)
+    <input id="model" placeholder="e.g. sonnet, haiku">
+  </label>
+  <label>Target language
+    <input id="targetLang" value="Korean">
+  </label>
+  <label>Batch size
+    <input id="batchSize" type="number" min="1" max="50" value="10">
+  </label>
+  <button id="translate">Translate this page</button>
+  <div class="modes">
+    <button data-mode="original">원본</button>
+    <button data-mode="both">원본+번역</button>
+    <button data-mode="translation">번역</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

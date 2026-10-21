@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "LLM Translate PoC",
+  "version": "0.0.1",
+  "description": "PoC: translate page paragraphs with a local LLM CLI via Native Messaging.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoHsyjNQKHYd9yuLErqMsrj2gO0erfFBQQa2pmz2XnuzomIYDW4Mu9wX6iGoR59vFWW0OMj31oPqNtTR2wasyhpc1rCOc2AKO5i3VIGLV2oNJMyRxOp0SQvLk92s9Ud6wpHgFHesbXbsSZFGvqr9B8DbNBat+sHI///rXm4+UECyUtUysv0bCs5qEIXbjG5bAFQ0phhFe8h3WnsehcG6f+C21uLJPVX+6BqkNMO2FASB1QhzkJ9fsfr8eNvvlJq13c8ftmw0JMt+8Q5pQVX7YcMeSdQ+iyiol3dYFd6XaUoWpfHxOV2JHMiur7rpFivOLTP1WKj8kxRrP/fft0F6UBwIDAQAB",
+  "permissions": ["nativeMessaging", "activeTab", "scripting", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

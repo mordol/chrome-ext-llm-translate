@@ -1,0 +1,22 @@
+[
+  {"id":"1","text":"Extensions can exchange messages with native applications using an API that is similar to the other message passing APIs. Native applications that support this feature must register a native messaging host that can communicate with the extension."},
+  {"id":"2","text":"The browser starts each native messaging host in a separate process and communicates with it using standard input and standard output streams."},
+  {"id":"3","text":"Each message is serialized using JSON, UTF-8 encoded and is preceded with a 32-bit message length in native byte order."},
+  {"id":"4","text":"The maximum size of a single message from the native messaging host is 1 MB, mainly to protect the browser from misbehaving native applications."},
+  {"id":"5","text":"When a messaging port is created using connectNative, the browser starts a native messaging host process and keeps it running until the port is destroyed."},
+  {"id":"6","text":"In contrast, when a message is sent using sendNativeMessage, without creating a messaging port, the browser starts a new host process for each message."},
+  {"id":"7","text":"On macOS, the system-wide manifest file is located at a fixed path, while the user-specific manifest file is stored in the browser's application support directory."},
+  {"id":"8","text":"The allowed_origins field lists the extensions that should have access to the native messaging host. Wildcards such as chrome-extension://*/* are not allowed."},
+  {"id":"9","text":"Large language models are trained on enormous collections of text and learn to predict the next token given the tokens that came before it."},
+  {"id":"10","text":"Because the model only sees text, any instruction embedded in the input can compete with the instructions written by the developer. This class of attack is known as prompt injection."},
+  {"id":"11","text":"A common mitigation is to treat untrusted content strictly as data, to remove every tool the model could call, and to run the model in an environment where mistakes cannot cause damage."},
+  {"id":"12","text":"Streaming responses let an application display partial results as soon as they are generated, which greatly improves perceived latency for long outputs."},
+  {"id":"13","text":"The IntersectionObserver API provides a way to asynchronously observe changes in the intersection of a target element with an ancestor element or with the document's viewport."},
+  {"id":"14","text":"Lazy loading defers work until it is actually needed. For a translation tool, that means translating the paragraphs the reader is about to see before the rest of the page."},
+  {"id":"15","text":"The MutationObserver interface provides the ability to watch for changes being made to the DOM tree, such as nodes being added or removed."},
+  {"id":"16","text":"Single-page applications frequently re-render parts of the page, which can silently remove elements that were inserted by an extension."},
+  {"id":"17","text":"Caching translated paragraphs avoids paying twice for the same text when the user reloads the page or navigates back to it."},
+  {"id":"18","text":"Command-line tools launched by a browser do not inherit the PATH configured in the user's shell profile, so they should be invoked by absolute path."},
+  {"id":"19","text":"Good translations preserve not only the meaning of each sentence but also the tone, the terminology, and the flow between neighboring paragraphs."},
+  {"id":"20","text":"Measuring startup time, time to first result, and average time per item makes it possible to compare different command-line tools on equal terms."}
+]

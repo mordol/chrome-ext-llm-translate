@@ -1,0 +1,40 @@
+.llmt-tr {
+  color: #1a5fb4 !important;
+}
+
+/* In "both" mode a translated list item must not take its own bullet or number. */
+html.llmt-mode-both li.llmt-tr {
+  list-style: none;
+  counter-increment: list-item 0;
+}
+
+html.llmt-mode-original .llmt-tr {
+  display: none !important;
+}
+
+html.llmt-mode-translation .llmt-src {
+  display: none !important;
+}
+
+html.llmt-mode-translation .llmt-tr {
+  color: inherit !important;
+}
+
+.llmt-pending {
+  outline: 1px dashed #c0c0c0;
+  outline-offset: 2px;
+}
+
+.llmt-badge {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2147483647;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font: 12px/1.4 -apple-system, system-ui, sans-serif;
+  white-space: pre;
+  pointer-events: none;
+}
