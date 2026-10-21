@@ -33,18 +33,61 @@ LLM CLI (claude -p / codex exec / cursor-agent -p)
 
 ## 설치 (개발용)
 
-필요한 것: macOS, Node, 그리고 로그인된 LLM CLI 중 하나 이상(`~/.local/bin/claude`, `codex`, `cursor-agent`).
+### 지원 범위
 
-1. host 설치:
+- **OS:** macOS만 지원합니다.
+  - 설치 스크립트는 macOS 경로만 알고 있습니다.
+  - Windows는 host를 레지스트리로 등록하고, Linux는 폴더 위치가 달라서 이 스크립트로는 설치되지 않습니다.
+- **브라우저:** 스크립트가 host manifest를 자동으로 설치하는 곳은 아래 두 곳뿐입니다.
+  - Dia: `~/Library/Application Support/Dia/User Data/NativeMessagingHosts/` (항상 설치)
+  - Chrome: `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/` (`~/Library/Application Support/Google/Chrome`이 있을 때만)
+  - 다른 Chromium 브라우저에서 쓰려면, 그 브라우저의 사용자 데이터 폴더 아래 `NativeMessagingHosts/`에 같은 manifest를 직접 복사해야 합니다. 동작 확인은 Dia에서만 했습니다.
+- **Node:** 설치할 때 `node`가 `PATH`에 있거나 `NODE_BIN`으로 지정되어 있어야 합니다.
+  - 둘 다 없으면 스크립트가 **아무 메시지 없이 exit 1로 끝납니다.**
+  - 동작 확인은 Node v26에서 했습니다.
+- **LLM CLI:** 쓰려는 CLI를 설치하고 **터미널에서 한 번 로그인**해 두어야 합니다. host는 로그인 상태를 그대로 쓸 뿐, 로그인을 대신 해 주지 못합니다.
+  - 기본 경로: `~/.local/bin/claude`, `~/.local/bin/codex`, `~/.local/bin/cursor-agent`
+
+### 설치 순서
+
+1. clone:
+   ```sh
+   git clone git@github.com:mordol/chrome-ext-llm-translate.git
+   cd chrome-ext-llm-translate
+   ```
+2. host 설치:
    ```sh
    ./scripts/install-host.sh
+   # node가 PATH에 없으면: NODE_BIN=/path/to/node ./scripts/install-host.sh
    ```
-   - Dia 폴더(`~/Library/Application Support/Dia/User Data/NativeMessagingHosts/`)에 manifest를 설치합니다. Chrome이 설치되어 있으면 Chrome 폴더에도 설치합니다.
-   - 브라우저가 실행한 host는 셸의 `PATH`를 물려받지 않습니다. 그래서 node 경로는 설치할 때 wrapper(`host/run-host.sh`)에 고정합니다. 다른 node를 쓰려면 `NODE_BIN=/path/to/node`를 지정하세요.
-   - CLI 경로는 기본적으로 `~/.local/bin/` 아래를 씁니다. 바꾸려면 `LLM_TRANSLATE_CLAUDE`, `LLM_TRANSLATE_CODEX`, `LLM_TRANSLATE_CURSOR` 환경 변수를 지정하세요.
-2. 브라우저 확장 관리 페이지에서 개발자 모드를 켜고 `extension/` 폴더를 압축해제 로드합니다. 확장 ID가 `mdnkgmlieapipiojgefbbmjbafdebhgg`인지 확인합니다.
-   - ID는 manifest의 `key`로 고정됩니다. 이 ID는 host manifest의 `allowed_origins`와 같아야 합니다. 키를 새로 만들면 `install-host.sh`의 `EXTENSION_ID`도 바꿔야 합니다.
-3. 연결 확인: 확장의 service worker 콘솔에서 `await echo('hi')`를 실행합니다. `{type:'echo', ...}`가 돌아오면 성공입니다.
+   - 스크립트는 `host/run-host.sh`(wrapper)를 만들고 위 브라우저 폴더에 `com.mordol.llm_translate.json`을 설치합니다.
+   - 브라우저가 실행한 host는 셸의 `PATH`를 물려받지 않습니다. 그래서 node의 절대 경로를 wrapper에 고정합니다.
+   - CLI가 기본 경로에 없으면 `LLM_TRANSLATE_CLAUDE`, `LLM_TRANSLATE_CODEX`, `LLM_TRANSLATE_CURSOR` 환경 변수로 지정합니다.
+3. 브라우저 확장 관리 페이지(Dia: `dia://extensions`, Chrome: `chrome://extensions`)에서 개발자 모드를 켜고, `extension/` 폴더를 압축해제 로드합니다. 확장 ID가 `mdnkgmlieapipiojgefbbmjbafdebhgg`인지 확인합니다.
+4. 연결 확인: 확장의 service worker 콘솔에서 `await echo('hi')`를 실행합니다. `{type:'echo', ...}`가 돌아오면 성공입니다.
+
+### 확장 ID와 키
+
+- 확장 ID는 `extension/manifest.json`의 `key`(**공개 키**)로 정해집니다. 이 값이 repo에 들어 있으므로, 어느 PC에서 clone해도 ID가 같습니다.
+- host manifest의 `allowed_origins`도 이 ID 하나로 설정됩니다(`install-host.sh`의 `EXTENSION_ID`).
+- **개인 키(`.pem`)는 repo에 없고, 설치나 사용에도 필요하지 않습니다.** 같은 ID로 `.crx` 패키지를 직접 만들 때만 필요합니다.
+- 키를 새로 만들면 ID가 바뀝니다. 그때는 `manifest.json`의 `key`와 `install-host.sh`의 `EXTENSION_ID`를 함께 바꾸고 설치 스크립트를 다시 실행해야 합니다.
+
+### 설치 스크립트를 다시 실행해야 하는 경우
+
+wrapper와 host manifest에는 **clone 위치와 node 경로가 절대 경로로 고정**됩니다. 다음 경우에는 `./scripts/install-host.sh`를 다시 실행하세요.
+
+- repo 폴더를 옮기거나 이름을 바꿨을 때
+- node 경로가 바뀌었을 때(예: nvm으로 버전을 바꾼 경우)
+
+### 제거
+
+```sh
+rm "$HOME/Library/Application Support/Dia/User Data/NativeMessagingHosts/com.mordol.llm_translate.json"
+rm -f "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.mordol.llm_translate.json"
+```
+
+그다음 브라우저에서 확장을 제거합니다.
 
 ## 사용
 
