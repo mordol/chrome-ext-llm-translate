@@ -10,6 +10,10 @@
     .modes button { flex: 1; }
     button.active { font-weight: bold; }
     #translate { width: 100%; margin-top: 8px; }
+    .row { display: flex; gap: 4px; }
+    .row input { flex: 1; }
+    .status { color: #888; font-size: 11px; min-height: 14px; }
+    .status.error { color: #c01c28; }
   </style>
 </head>
 <body>
@@ -21,8 +25,13 @@
     </select>
   </label>
   <label>Model (empty = CLI default)
-    <input id="model" placeholder="e.g. sonnet, haiku">
+    <div class="row">
+      <input id="model" list="modelList" placeholder="pick or type a model id">
+      <button id="refreshModels" title="Reload the model list from the CLI">↻</button>
+    </div>
   </label>
+  <datalist id="modelList"></datalist>
+  <div id="modelStatus" class="status"></div>
   <label>Target language
     <input id="targetLang" value="Korean">
   </label>

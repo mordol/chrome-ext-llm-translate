@@ -23,6 +23,6 @@ host.stdout.on('data', chunk => {
     const reply = JSON.parse(buf.subarray(4, 4 + len).toString('utf8'));
     buf = buf.subarray(4 + len);
     console.log(`+${Date.now() - t0}ms`, JSON.stringify(reply));
-    if (reply.type === 'echo' || reply.type === 'done' || reply.type === 'error') host.stdin.end();
+    if (reply.type === 'echo' || reply.type === 'models' || reply.type === 'done' || reply.type === 'error') host.stdin.end();
   }
 });

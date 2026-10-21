@@ -50,6 +50,16 @@ LLM CLI (claude -p / codex exec / cursor-agent -p)
 
 popup에서 CLI·모델·대상 언어·묶음 크기를 고르고 **Translate this page**를 누릅니다. 진행 상황과 마지막 묶음의 측정값은 페이지 오른쪽 아래에 표시됩니다.
 
+모델 칸은 CLI에서 가져온 목록을 자동완성으로 보여 줍니다. 목록에 없는 ID도 직접 입력할 수 있고, 모델 값은 CLI별로 따로 기억합니다. 목록은 저장해 두며 ↻ 버튼으로 다시 가져옵니다.
+
+| CLI | 목록 출처 |
+|---|---|
+| claude | 목록 명령이 없어서 도움말에 안내된 별칭(`fable`, `opus`, `sonnet`, `haiku`)을 고정으로 사용 |
+| codex | `codex debug models`에서 노출 여부가 `list`인 모델. 디버그용 명령이라 버전에 따라 형식이 바뀔 수 있음 |
+| cursor-agent | `cursor-agent models` 출력 |
+
+모델 ID는 화면에 보이는 이름과 다를 수 있습니다. 예를 들어 codex의 "GPT-6-Luna"는 `gpt-6-luna`입니다.
+
 - 권장 설정: claude + `sonnet` 또는 `haiku`, 묶음 10 안팎. 근거는 [POC_RESULTS.md](POC_RESULTS.md)의 Q4를 참고하세요.
 - host 로그: `$TMPDIR/llm-translate-host.log`
 - `host/host.js`를 고친 뒤에는 확장을 새로고침해야 새 host 프로세스가 실행됩니다.

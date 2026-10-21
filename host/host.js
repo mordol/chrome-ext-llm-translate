@@ -42,7 +42,14 @@ process.stdin.on('data', chunk => {
   }
 });
 
+// A one-shot sendNativeMessage may close stdin before a model listing finishes,
+// so exiting waits for those requests.
+let stdinClosed = false;
+let pendingModelRequests = 0;
+
 process.stdin.on('end', () => {
+  stdinClosed = true;
+  if (pendingModelRequests) return;
   log('stdin closed, exiting');
   process.exit(0);
 });
@@ -58,6 +65,9 @@ function handle(msg) {
       break;
     case 'cancel':
       jobs.get(msg.job)?.kill();
+      break;
+    case 'models':
+      listModels(msg.cli);
       break;
     default:
       send({ type: 'error', error: `unknown type: ${msg.type}` });
@@ -277,3 +287,60 @@ function translate(msg) {
 }
 
 log('host started', { pid: process.pid, argv: process.argv, PATH: process.env.PATH });
+
+// --- Model listing ---------------------------------------------------------
+
+const { execFile } = require('child_process');
+
+// claude has no listing command; its help only documents these aliases.
+const CLAUDE_MODEL_ALIASES = [
+  { id: 'fable', name: 'Fable (latest)' },
+  { id: 'opus', name: 'Opus (latest)' },
+  { id: 'sonnet', name: 'Sonnet (latest)' },
+  { id: 'haiku', name: 'Haiku (latest)' },
+];
+
+const MODEL_LISTERS = {
+  claude: async () => CLAUDE_MODEL_ALIASES,
+  // `codex debug models` is a debug command, so its JSON shape may change between versions.
+  codex: async () => {
+    const { models } = JSON.parse(await run(CLI_PATHS.codex, ['debug', 'models']));
+    return models
+      .filter(m => m.visibility === 'list')
+      .sort((a, b) => a.priority - b.priority)
+      .map(m => ({ id: m.slug, name: m.display_name }));
+  },
+  // Lines look like "gpt-5.2 - GPT-5.2"; some names carry zero-width spaces.
+  cursor: async () => {
+    const out = await run(CLI_PATHS.cursor, ['models']);
+    return out.split('\n')
+      .map(line => line.match(/^(\S+) - (.+)$/))
+      .filter(Boolean)
+      .map(([, id, name]) => ({ id, name: name.replace(/[\u200b-\u200d\ufeff]/g, '').trim() }));
+  },
+};
+
+function run(cmd, args) {
+  return new Promise((resolve, reject) => {
+    const child = execFile(cmd, args, { cwd: os.tmpdir(), timeout: 30000, maxBuffer: 16 * 1024 * 1024 }, (err, stdout, stderr) => {
+      if (err) reject(new Error(`${path.basename(cmd)} ${args.join(' ')}: ${(stderr || err.message).trim().slice(-500)}`));
+      else resolve(stdout);
+    });
+    child.stdin.end();
+  });
+}
+
+async function listModels(cli) {
+  pendingModelRequests++;
+  try {
+    const lister = MODEL_LISTERS[cli];
+    if (!lister) throw new Error(`unsupported cli: ${cli}`);
+    send({ type: 'models', cli, models: await lister() });
+  } catch (e) {
+    log('models failed', cli, e.message);
+    send({ type: 'models', cli, error: e.message });
+  } finally {
+    pendingModelRequests--;
+    if (stdinClosed && !pendingModelRequests) process.exit(0);
+  }
+}
