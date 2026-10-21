@@ -8,7 +8,11 @@ HOST_NAME="com.mordol.llm_translate"
 EXTENSION_ID="mdnkgmlieapipiojgefbbmjbafdebhgg"
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-NODE_BIN="${NODE_BIN:-$(command -v node)}"
+NODE_BIN="${NODE_BIN:-$(command -v node || true)}"
+if [ -z "$NODE_BIN" ] || [ ! -x "$NODE_BIN" ]; then
+  echo "error: node not found. Put node on PATH or run: NODE_BIN=/path/to/node $0" >&2
+  exit 1
+fi
 WRAPPER="$ROOT/host/run-host.sh"
 
 cat > "$WRAPPER" <<EOF

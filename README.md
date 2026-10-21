@@ -43,7 +43,7 @@ LLM CLI (claude -p / codex exec / cursor-agent -p)
   - Chrome: `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/` (`~/Library/Application Support/Google/Chrome`이 있을 때만)
   - 다른 Chromium 브라우저에서 쓰려면, 그 브라우저의 사용자 데이터 폴더 아래 `NativeMessagingHosts/`에 같은 manifest를 직접 복사해야 합니다. 동작 확인은 Dia에서만 했습니다.
 - **Node:** 설치할 때 `node`가 `PATH`에 있거나 `NODE_BIN`으로 지정되어 있어야 합니다.
-  - 둘 다 없으면 스크립트가 **아무 메시지 없이 exit 1로 끝납니다.**
+  - 둘 다 없거나 `NODE_BIN`이 실행 파일이 아니면, 스크립트가 오류 메시지를 출력하고 아무것도 설치하지 않은 채 끝납니다.
   - 동작 확인은 Node v26에서 했습니다.
 - **LLM CLI:** 쓰려는 CLI를 설치하고 **터미널에서 한 번 로그인**해 두어야 합니다. host는 로그인 상태를 그대로 쓸 뿐, 로그인을 대신 해 주지 못합니다.
   - 기본 경로: `~/.local/bin/claude`, `~/.local/bin/codex`, `~/.local/bin/cursor-agent`
