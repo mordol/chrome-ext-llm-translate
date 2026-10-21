@@ -1,6 +1,6 @@
 # PoC 결과 기록: LLM CLI 기반 웹 페이지 단락 번역 extension
 
-`POC_BRIEF.md` 7장(결과 기록)에 넣을 내용입니다. 기록 도중 `POC_BRIEF.md`가 작업 폴더에서 사라져서 별도 파일로 작성했습니다.
+PoC에서 확인하려던 질문(Q1~Q4)별 결과입니다. 프로젝트 개요와 설치 방법은 [README.md](README.md)를 참고하세요.
 
 기록일: 2026-10-21. 환경: Dia(현재 Chromium **155**.0.8059.80), node v26.10.0(`/opt/homebrew/bin/node`), claude 2.1.286, codex-cli 0.159.2, cursor-agent 2026.10.19.
 
