@@ -100,6 +100,8 @@ const ADAPTERS = {
       '--safe-mode',
       '--strict-mcp-config',
       '--setting-sources', '',
+      // Some models (e.g. haiku) think for ~10 s before the first text token otherwise.
+      '--settings', '{"alwaysThinkingEnabled":false}',
       '--disable-slash-commands',
       '--no-session-persistence',
       '--output-format', 'stream-json',
@@ -156,6 +158,13 @@ const ADAPTERS = {
         let e;
         try { e = JSON.parse(line); } catch { return; }
         if (e.type === 'turn.started') emit({ kind: 'ready' });
+        // Failures (e.g. unsupported model) are reported on stdout, not stderr.
+        else if (e.type === 'turn.failed' || e.type === 'error') {
+          const raw = e.error?.message ?? e.message ?? '';
+          let message = raw;
+          try { message = JSON.parse(raw).error?.message || raw; } catch {}
+          emit({ kind: 'error', message });
+        }
         else if (e.type === 'item.completed' && e.item?.type === 'agent_message') emit({ kind: 'text', text: `${e.item.text}\n` });
       },
     };
@@ -211,6 +220,7 @@ function translate(msg) {
   let stdoutBuf = '';
   let textBuf = '';
   let stderr = '';
+  let cliError = '';
 
   // A segment is complete once its line ends; the last one is flushed on exit.
   function flushLines(final) {
@@ -235,6 +245,7 @@ function translate(msg) {
       if (ev.model) stats.model = ev.model;
     }
     else if (ev.kind === 'text') { textBuf += ev.text; flushLines(false); }
+    else if (ev.kind === 'error') cliError = ev.message;
     else if (ev.kind === 'result') {
       stats.isError = ev.isError;
       if (ev.costUsd !== undefined) stats.costUsd = ev.costUsd;
@@ -260,7 +271,7 @@ function translate(msg) {
     stats.totalMs = Date.now() - t0;
     stats.missing = [...known].filter(id => !done.has(id));
     log('job done', job, stats, code !== 0 ? stderr.slice(-2000) : '');
-    if (code !== 0) send({ type: 'error', job, error: `cli exited ${code}: ${stderr.slice(-500)}` });
+    if (code !== 0) send({ type: 'error', job, error: `cli exited ${code}: ${cliError || stderr.slice(-500)}` });
     send({ type: 'done', job, stats });
   });
 }

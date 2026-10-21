@@ -18,3 +18,5 @@
 {"at":"2026-10-21T06:39:08.500Z","cli":"cursor","model":"GPT-5.4 Mini Low","batch":5,"calls":4,"avgReadyMs":4476,"firstParaMs":7821,"avgCallMs":9838,"wallMs":39352,"msPerPara":1968,"missing":0,"costUsd":0}
 {"at":"2026-10-21T06:39:08.500Z","cli":"cursor","model":"GPT-5.4 Mini Low","batch":10,"calls":2,"avgReadyMs":4618,"firstParaMs":8295,"avgCallMs":10879,"wallMs":21759,"msPerPara":1088,"missing":0,"costUsd":0}
 {"at":"2026-10-21T06:39:08.500Z","cli":"cursor","model":"GPT-5.4 Mini Low","batch":20,"calls":1,"avgReadyMs":4261,"firstParaMs":7717,"avgCallMs":11793,"wallMs":11794,"msPerPara":590,"missing":0,"costUsd":0}
+{"at":"2026-10-21T07:04:45.380Z","cli":"claude","model":"claude-haiku-4-5-20251001","batch":10,"calls":2,"avgReadyMs":225,"firstParaMs":2016,"avgCallMs":8145,"wallMs":16375,"msPerPara":819,"missing":0,"costUsd":0.01}
+{"at":"2026-10-21T07:04:45.382Z","cli":"claude","model":"claude-haiku-4-5-20251001","batch":20,"calls":1,"avgReadyMs":244,"firstParaMs":2108,"avgCallMs":12939,"wallMs":12939,"msPerPara":647,"missing":0,"costUsd":0.0095}
